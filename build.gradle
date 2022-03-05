@@ -1,0 +1,23 @@
+plugins {
+    id 'com.moowork.node' version '1.2.0'
+}
+
+node {
+    download = true
+}
+
+tasks.register('build') {
+    dependsOn('npm_build')
+    dependsOn('zip')
+}
+
+tasks.register('zip', Zip) {
+    dependsOn('npm_build')
+    description 'Archives package'
+    from '.'
+    include('*', 'bin/**', 'data/**', 'node_modules/**', 'public/**', 'routes/**', 'views/**')
+    archiveName 'Reports.zip'
+    destinationDir(file('dist'))
+}
+
+tasks.named('npm_build') { dependsOn ('npmInstall', 'npm_test') }
